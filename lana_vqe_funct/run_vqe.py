@@ -1,7 +1,7 @@
 import pennylane as qml
 import numpy as np
 
-class Run_VQE:
+def run_vqe(cost_fn, max_iter, initial_params, opt, opt_step, diag_approx=False):
     """
     run a VQE trial.
     
@@ -24,38 +24,36 @@ class Run_VQE:
                 for the fubini-study metric.
     
     """
-    
-    def __init__(
-        self, cost_fn, max_iter, initial_params, opt, opt_step, diag_approx=False
-    ):
-        self.energy_history = []
-    
-        if opt =='GradientDescentOptimizer':
-            opt = qml.GradientDescentOptimizer(opt_step)
+    energy_history = []
+
+    if opt =='GradientDescentOptimizer':
+        opt = qml.GradientDescentOptimizer(opt_step)
+
+    elif opt =='QNGOptimizer':
+        opt = qml.QNGOptimizer(opt_step, diag_approx)
+
+    else:
+        raise ValueError('Use either QNGOptimizer of GradientDescentOptimizer')
+
+    energy_history = []
+    conv_tol = 1e-06
+
+    params = initial_params
+    prev_energy = cost_fn(params)
+
+    for n in range(max_iter):
+        params = opt.step(cost_fn, params)
+        energy = cost_fn(params)
+        conv = np.abs(energy - prev_energy)
+
+        if n % 20 == 0:
+            print('Iteration = {:},  Ground-state energy = {:.8f} Ha,  Convergence parameter = {'
+                  ':.8f} Ha'.format(n, energy, conv))
+
+        if conv <= conv_tol:
+            break
+
+        energy_history.append(energy)
+        prev_energy = energy
         
-        elif opt =='QNGOptimizer':
-            opt = qml.QNGOptimizer(opt_step, diag_approx)
-        
-        else:
-            raise ValueError('Use either QNGOptimizer of GradientDescentOptimizer')
-            
-        energy_history = []
-        conv_tol = 1e-06
-        
-        params = initial_params
-        prev_energy = cost_fn(params)
-
-        for n in range(max_iter):
-            params = opt.step(cost_fn, params)
-            energy = cost_fn(params)
-            conv = np.abs(energy - prev_energy)
-
-            if n % 20 == 0:
-                print('Iteration = {:},  Ground-state energy = {:.8f} Ha,  Convergence parameter = {'
-                      ':.8f} Ha'.format(n, energy, conv))
-
-            if conv <= conv_tol:
-                break
-
-            self.energy_history.append(energy)
-            prev_energy = energy
+    return energy_history
