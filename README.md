@@ -14,4 +14,5 @@ https://medium.com/@ziyu.lili.maggie/rethinking-gradient-descent-with-quantum-na
 2. Lana: Gradient Descent from the Group Up
 https://medium.com/@lana.bozanic/quantum-natural-gradient-from-the-ground-up-983db57cbf6
 
+or, check out the QNG tutorials in the repo!
 
