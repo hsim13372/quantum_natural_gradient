@@ -31,7 +31,6 @@ def run_vqe(cost_fn, max_iter, initial_params, opt, opt_step, diag_approx=False)
 
     elif opt =='QNGOptimizer':
         opt = qml.QNGOptimizer(opt_step, diag_approx)
-        
 
     else:
         raise ValueError('Use either QNGOptimizer of GradientDescentOptimizer')
