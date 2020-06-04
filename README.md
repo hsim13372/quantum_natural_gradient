@@ -19,7 +19,7 @@ or, check out the QNG tutorials in the repo!
 
 All the tutorials apply QNG to some Hamiltonian for the variational quantum eigensolver algorithm (VQE):
 
-1. Single qubit case:  
+1. Single qubit case
 2. H2 molecule (finding the ground state energy)
 3. LiH molecule 
 
