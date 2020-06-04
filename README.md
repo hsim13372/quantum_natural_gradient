@@ -7,11 +7,9 @@ The purpose of this repo was to experiment with the new quantum natural gradient
 
 Our findings were that in every case the Quantum Natural Gradient (QNG) method would always out-best the vanilla gradient descent method. To understand why, check out these two articles written by QOSF mentees Maggie and Lana, for an in-depth and intuitive explanation of the algorithm:
 
-1. Maggie: Rethinking Gradient Descent With Quantum Natural Gradient
-https://medium.com/@ziyu.lili.maggie/rethinking-gradient-descent-with-quantum-natural-gradient-330da14f621
+1. Maggie: Rethinking Gradient Descent With Quantum Natural Gradient <a href = 'https://medium.com/@ziyu.lili.maggie/rethinking-gradient-descent-with-quantum-natural-gradient-330da14f621'>here</a>
 
-2. Lana: Gradient Descent from the Group Up
-https://medium.com/@lana.bozanic/quantum-natural-gradient-from-the-ground-up-983db57cbf6
+2. Lana: Gradient Descent from the Group Up <a href = 'https://medium.com/@lana.bozanic/quantum-natural-gradient-from-the-ground-up-983db57cbf6'>here</a>
 
 or, check out the QNG tutorials in the repo!
 
