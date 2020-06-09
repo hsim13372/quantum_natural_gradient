@@ -1,6 +1,8 @@
 
 # Accelerating VQEs with Quantum Natural Gradient 
 
+![QNG](images/qng_example.pdf)
+
 This project repo was created as part of the [Quantum Open Source Foundation (QOSF)](http://qosf.org) Mentorship Program.
 
 Recently, several works, namely [Stokes et al.](https://arxiv.org/abs/1909.02108), have proposed and investigated the use of "quantum natural gradients" (QNG) to accelerate the optimization step of variational quantum algorithms.
