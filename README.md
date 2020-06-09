@@ -1,7 +1,7 @@
 
 # Accelerating VQEs with Quantum Natural Gradient 
 
-![QNG](images/qng_example.pdf)
+<img src="images/qng_example.pdf" alt="drawing" width="200"/>
 
 This project repo was created as part of the [Quantum Open Source Foundation (QOSF)](http://qosf.org) Mentorship Program.
 
