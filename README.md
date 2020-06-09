@@ -20,5 +20,5 @@ We investigate the following systems:
 1. Single qubit case (where we can visualize the optimization paths using the Bloch sphere)
 2. H2 molecule
 
-and ran VQE calculations using "vanilla" gradient descent and gradient descent that uses quantum natural gradients.
+and ran VQE calculations using "vanilla" gradient descent and gradient descent that uses quantum natural gradients for comparison.
 We provide several methods for visualizing the performance and optimization paths, and we empirically explore the robustness of QNG to parameter initialization.
