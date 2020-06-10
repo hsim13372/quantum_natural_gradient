@@ -1,15 +1,15 @@
-import pennylane as qml
-import tensorflow as tf 
 
-import scipy as sp
+"""Module for visualizing optimization paths/results."""
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import matplotlib as mpl
 import numpy as np
+
+import pennylane as qml
 
 import qutip as qt
 from qutip import Bloch, basis
+
 
 def plot_params(gd_param_history, qngd_param_history, plot_interval, figsize, linewidth):
     
