@@ -1,11 +1,47 @@
-import pennylane as qml
-import tensorflow as tf 
-from pennylane.qnodes import PassthruQNode
+''' Module for running VQE iteration that stores state and parameter history '''
 
+import pennylane as qml
+from pennylane.qnodes import PassthruQNode
 import numpy as np
 
+def init_cost_fn(dev, circuit, coeffs, obs): 
+
+    '''
+    instantiate the cost function.
+
+    args: 
+
+	dev: configure the device using qml.device('device name', wires='# of wires')
+
+	circuit: define the circuit (params, wires ='# of wires')
+
+	coeffs (float): coefficients of the Hamiltonian expression
+
+	obs: observables in the Hamiltonian expression
+
+    ** Example **
+
+    A Hamiltonian can be created by simply passing the list of coefficients as well as the list of observables:
+
+    >>> coeffs = [1, 1]
+    >>> obs = [qml.PauliX(0), qml.PauliZ(0)]
+    >>> H = qml.Hamiltonian(coeffs, obs)
+    >>> print(H)
+    (1) [X0] + (1) [Z0]
+
+    '''
+
+    qnode = PassthruQNode(circuit, dev)
+
+    H = qml.Hamiltonian(coeffs, obs)
+
+    cost_fn = qml.VQECost(circuit, H, dev)
+
+    return cost_fn
+
 def run_vqe(cost_fn, max_iter, initial_params, opt, opt_step, dev, diag_approx=False):
-    """
+
+    '''
     run a VQE trial.
     
     args:
@@ -18,8 +54,6 @@ def run_vqe(cost_fn, max_iter, initial_params, opt, opt_step, dev, diag_approx=F
     
         opt (string): type of optimizer we're using for the VQE run 
             (can be qml.QNGOptimizer, qml.GradientDescentOptimizer)
-
-        dev: configure the device using qml.device('device name', wires='# of wires')
         
         opt_step (float): the optimization step you're using for the optimizer.
         
@@ -28,7 +62,8 @@ def run_vqe(cost_fn, max_iter, initial_params, opt, opt_step, dev, diag_approx=F
                 this tells us if you want to use block-diagonal or diagonal approximation form
                 for the fubini-study metric.
     
-    """
+    '''
+
     if opt =='GradientDescentOptimizer':
         opt = qml.GradientDescentOptimizer(opt_step)
 

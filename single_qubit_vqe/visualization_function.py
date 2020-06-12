@@ -1,15 +1,14 @@
+''' Module for visualizing optimization path/results '''
 
-"""Module for visualizing optimization paths/results."""
+import scipy as sp
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib as mpl
 import numpy as np
-
-import pennylane as qml
 
 import qutip as qt
 from qutip import Bloch, basis
-
 
 def plot_params(gd_param_history, qngd_param_history, plot_interval, figsize, linewidth):
     
@@ -21,17 +20,17 @@ def plot_params(gd_param_history, qngd_param_history, plot_interval, figsize, li
 
     Energies at different grid points have been pre-computed. 
 
-    args: 
+    	args: 
 
-    gd_param_history (string): paramter history of vanilla gradient descent 
+    	gd_param_history (string): paramter history of vanilla gradient descent 
 
-    qngd_param_history (string): parameter history of quantum natural gradient descent 
+    	qngd_param_history (string): parameter history of quantum natural gradient descent 
 
-    plot_interval (int): set the interval at which points are plotted along the optimization path (ie, every 10th point)
+    	plot_interval (int): set the interval at which points are plotted along the optimization path (ie, every 10th point)
 
-    figsize (np.array): two-dimensional array specifying size of figure (ie, [6,6])
+    	figsize (np.array): two-dimensional array specifying size of figure (ie, [6,6])
 
-    linewidth (int): set width of line for optimization path
+    	linewidth (int): set width of line for optimization path
 
     '''
     # Discretize the parameter space
@@ -85,60 +84,41 @@ def plot_params(gd_param_history, qngd_param_history, plot_interval, figsize, li
 
     return plt.show()
 
-def plot_states(gd_state_history, qngd_state_history, plot_interval, figsize, pointsize):
-        
-    '''
-    Plot the optimization path on a bloch sphere. 
 
-    This function requires the iterations for gradient descent and quantum natural gradient descent to have been run already. 
-    Store paramters for gradient descent optimization as gd_param_history and paramters for quantum natural gradient optimization as qngd_param_history.
-
-    args: 
-
-    gd_state_history (string): statevector history of vanilla gradient descent 
-
-    qngd_state_history (string): statevector history of quantum natural gradient descent 
-
-    plot_interval (int): set the interval at which points are plotted along the optimization path (ie, every 10th point)
-
-    figsize (np.array): two-dimensional array specifying size of figure (ie, [6,6])
-
-    pointsize (int): set size of points on optimization path
+def prepare_plot_states(state_history):
 
     '''
-    # quantum natural gradient statevectors for plotting
-    qngd_plot_states = []
-    lst = qngd_state_history
+    Convert the stored statevectors into QObjects in QuTip
+
+    	args: 
+
+    	state_history (list of numpy.ndarray): statevector history of optimization path
+    
+    '''
+
+    # Convert statevectors for plotting into QObject
+    plot_states = []
+    lst = state_history
 
     for i in range(len(lst)):
         psi = lst[i]
         psi = psi/np.linalg.norm(psi)
 
-    # Convert to QObject in QuTiP
-    coords = [qt.Qobj(psi)]
+        # Convert to QObject in QuTiP
+        coords = [qt.Qobj(psi)]
 
-    qngd_plot_states.append(coords)
+        # Store all the statevecotrs 
+        plot_states.append(coords)
 
-    # Vanilla gradient descent statevectors for plotting
-    gd_plot_states = []
-    lst = gd_state_history
-
-    for i in range(len(lst)):
-        gd_psi = lst[i]
-        gd_psi = gd_psi/np.linalg.norm(gd_psi)
-
-    # Convert to QObject in QuTiP
-    coords = [qt.Qobj(gd_psi)]
-
-    gd_plot_states.append(coords)
+    # Convert QObjects into coordinates to plot on the bloch sphere
     from qutip.expect import expect
     from qutip.operators import sigmax, sigmay, sigmaz
 
-    qngd_coords_x = []
-    qngd_coords_y = []
-    qngd_coords_z = []
+    coords_x = []
+    coords_y = []
+    coords_z = []
 
-    for qobj in qngd_plot_states:
+    for qobj in plot_states:
         st = qobj
         x = expect(sigmax(), st)
         y = expect(sigmay(), st)
@@ -146,39 +126,39 @@ def plot_states(gd_state_history, qngd_state_history, plot_interval, figsize, po
 
         for i in range(len(x)):
             x_list = x[i]
-            qngd_coords_x.append(x_list)
+            coords_x.append(x_list)
 
             y_list = y[i]
-            qngd_coords_y.append(y_list)
+            coords_y.append(y_list)
 
             z_list = z[i]
-            qngd_coords_z.append(z_list)
+            coords_z.append(z_list)
+    
+    return coords_x, coords_y, coords_z
 
-    gd_coords_x = []
-    gd_coords_y = []
-    gd_coords_z = []
 
-    for qobj in gd_plot_states:
-        st = qobj
-        x = expect(sigmax(), st)
-        y = expect(sigmay(), st)
-        z = expect(sigmaz(), st)
-
-        for i in range(len(x)):
-            x_list = x[i]
-            gd_coords_x.append(x_list)
-
-            y_list = y[i]
-            gd_coords_y.append(y_list)
-
-            z_list = z[i]
-            gd_coords_z.append(z_list)
+def plot_bloch_sphere(qngd_coords_x, qngd_coords_y, qngd_coords_z, gd_coords_x, gd_coords_y, gd_coords_z, plot_interval, figsize, pointsize):
         
-    ### settings for bloch sphere visualization ###
+    '''
+    Plot the optimization path on a bloch sphere. 
+
+    	args: 
+
+    	qngd_coords_x (list of floats): x-coordinates for plotting quantum natural gradient descent statevectors (same applies for qngd_coords_y and qngd_coords_z, for y and z coordinates, respectively)
+
+    	gd_coords_x (list of floats): x-coordinates for plotting vanilla gradient descent statevectors (same applies for gd_coords_y and gd_coords_z, for y and z coordinates, respectively)
+
+    	plot_interval (int): set the interval at which points are plotted along the optimization path (ie, every 10th point)
+
+    	figsize (np.array): two-dimensional array specifying size of figure (ie, [6,6])
+
+    	pointsize (int): set size of points on optimization path
+
+    '''
 
     b = Bloch()
     b.sphere_alpha = 0.1
-    b.figsize = [8,8]
+    b.figsize = figsize
 
     # colors #
     colors = ['g', 'g', 'k', 'k']
@@ -187,14 +167,14 @@ def plot_states(gd_state_history, qngd_state_history, plot_interval, figsize, po
     b.point_marker = 'o'
     b.point_size = [pointsize]
 
-    # Add points
-    b.add_points([gd_coords_x[::plot_interval], gd_coords_y[::plot_interval], gd_coords_z[::plot_interval]])
-    # Add line
-    b.add_points([gd_coords_x, gd_coords_y, gd_coords_z], 'l')
-
-    # Add points
+    # Add points for qngd
     b.add_points([qngd_coords_x[::plot_interval], qngd_coords_y[::plot_interval], qngd_coords_z[::plot_interval]])
-    # Add line
+    # Add line for qngd
     b.add_points([qngd_coords_x, qngd_coords_y, qngd_coords_z], 'l')
+
+    # Add points for gd
+    b.add_points([gd_coords_x[::plot_interval], gd_coords_y[::plot_interval], gd_coords_z[::plot_interval]])
+    # Add line for gd
+    b.add_points([gd_coords_x, gd_coords_y, gd_coords_z], 'l')
 
     b.show()
