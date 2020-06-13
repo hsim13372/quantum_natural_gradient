@@ -137,18 +137,18 @@ def prepare_plot_states(state_history):
     return coords_x, coords_y, coords_z
 
 
-def plot_bloch_sphere(qngd_coords_x, qngd_coords_y, qngd_coords_z, gd_coords_x, gd_coords_y, gd_coords_z, plot_interval, figsize, pointsize):
+def plot_bloch_sphere(opt_coords_x, opt_coords_y, opt_coords_z, plot_interval, plot_color, figsize, pointsize):
         
     '''
     Plot the optimization path on a bloch sphere. 
 
     	args: 
 
-    	qngd_coords_x (list of floats): x-coordinates for plotting quantum natural gradient descent statevectors (same applies for qngd_coords_y and qngd_coords_z, for y and z coordinates, respectively)
-
-    	gd_coords_x (list of floats): x-coordinates for plotting vanilla gradient descent statevectors (same applies for gd_coords_y and gd_coords_z, for y and z coordinates, respectively)
+    	opt_coords_x (list of floats): x-coordinates for plotting gradient descent optimization path statevectors (same applies for opt_coords_y and opt_coords_z, for y and z coordinates, respectively)
 
     	plot_interval (int): set the interval at which points are plotted along the optimization path (ie, every 10th point)
+    	
+    	plot_color: set the color of the optimization path points and line (ie, 'k' for black)
 
     	figsize (np.array): two-dimensional array specifying size of figure (ie, [6,6])
 
@@ -161,20 +161,14 @@ def plot_bloch_sphere(qngd_coords_x, qngd_coords_y, qngd_coords_z, gd_coords_x, 
     b.figsize = figsize
 
     # colors #
-    colors = ['g', 'g', 'k', 'k']
-    b.point_color = list(colors)
+    b.point_color = plot_color
 
     b.point_marker = 'o'
     b.point_size = [pointsize]
 
-    # Add points for qngd
-    b.add_points([qngd_coords_x[::plot_interval], qngd_coords_y[::plot_interval], qngd_coords_z[::plot_interval]])
-    # Add line for qngd
-    b.add_points([qngd_coords_x, qngd_coords_y, qngd_coords_z], 'l')
-
-    # Add points for gd
-    b.add_points([gd_coords_x[::plot_interval], gd_coords_y[::plot_interval], gd_coords_z[::plot_interval]])
-    # Add line for gd
-    b.add_points([gd_coords_x, gd_coords_y, gd_coords_z], 'l')
+    # Add points for optimization path
+    b.add_points([opt_coords_x[::plot_interval], opt_coords_y[::plot_interval], opt_coords_z[::plot_interval]])
+    # Add line for optimization path
+    b.add_points([opt_coords_x, opt_coords_y, opt_coords_z], 'l')
 
     b.show()
