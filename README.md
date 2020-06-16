@@ -19,7 +19,7 @@ In addition, we provide several tutorials in this repo for running and analyzing
 
 We investigate the following systems:
 
-1. [Single qubit rotations](https://github.com/hsim13372/quantum_natural_gradient/tree/master/single_qubit_vqe) (where we can visualize the optimization paths using the Bloch sphere)
+1. [Single qubit rotations](https://github.com/hsim13372/quantum_natural_gradient/tree/master/single_qubit_vqe) (where we can visualize the optimization paths on the Bloch sphere)
 2. [H2 molecule](https://github.com/hsim13372/quantum_natural_gradient/tree/master/h2)
 3. [LiH molecule](https://github.com/hsim13372/quantum_natural_gradient/tree/master/lih)
 
