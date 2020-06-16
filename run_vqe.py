@@ -17,7 +17,7 @@ def run_vqe(cost_fn, max_iter, initial_params, opt_name, step_size, conv_tol=1e-
     initial_params : numpy.ndarray
         Vector of initial parameter values
     opt_name : str
-        Name of optimizer. Valid options are: QNGOptimizer and GradientDescentOptimizer.
+        Name of optimizer. Valid options are: QNGOptimizer or GradientDescentOptimizer.
     step_size : float
         Stepsize or learning rate of the optimizer
     conv_tol : float
@@ -76,7 +76,8 @@ def run_vqe(cost_fn, max_iter, initial_params, opt_name, step_size, conv_tol=1e-
 def run_single_qubit_vqe(cost_fn, dev, max_iter, initial_params, opt_name, 
                          step_size, conv_tol=1e-6, diag_approx=False):
     """Launches a VQE calculation for single-qubit systems, where we may be interested
-    in plotting the optimization path on the Bloch sphere.
+    in plotting the optimization path on the Bloch sphere, and thus, need to save the 
+    statevector and circuit parameter history.
     
     Args:
     =====
