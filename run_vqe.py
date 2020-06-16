@@ -1,45 +1,54 @@
-import pennylane as qml
-import numpy as np
 
-def run_vqe(cost_fn, max_iter, initial_params, opt, opt_step, diag_approx=False):
-    """
-    run a VQE trial.
+"""Module for launching VQE calculations."""
+
+import numpy as np
+import pennylane as qml
+
+
+def run_vqe(cost_fn, max_iter, initial_params, opt_name, step_size, conv_tol=1e-6, diag_approx=False):
+    """Launches a VQE calculation.
     
-    args:
-    
-        cost_fn (VQECost): the cost function we are trying to optimize
-    
-        max_iter (int): number iterations of energy improvement for the VQE run.
-        
-        initial_params (nump.ndarray): the initial params we're starting with 
-    
-        opt (string): type of optimizer we're using for the VQE run 
-            (can be qml.QNGOptimizer, qml.GradientDescentOptimizer)
-        
-        opt_step (float): the optimization step you're using for the optimizer.
-        
-        if opt=QNGOptimizer,
-            diag_approx (boolean): if using the quantum natural gradient descent optimization,
-                this tells us if you want to use block-diagonal or diagonal approximation form
-                for the fubini-study metric.
+    Args:
+    =====
+    cost_fn : VQECost
+        VQE cost function we are trying to optimize
+    max_iter : int
+        Maximum number of optimization iterations
+    initial_params : numpy.ndarray
+        Vector of initial parameter values
+    opt_name : str
+        Name of optimizer. Valid options are: QNGOptimizer and GradientDescentOptimizer.
+    step_size : float
+        Stepsize or learning rate of the optimizer
+    conv_tol : float
+        Convergence tolerance for optimizer (relative improvement in energy)
+    diag_approx : bool
+        If using QNGOptimizer, diag_approx is an option for using the block-diagonal 
+        approximation to the Fubini-Study metric. If false, the diagonal approximation
+        is used.
+       
+    Returns:
+    ========
+    energy_history : list/numpy.ndarray
+        History of energies
+    n : int
+        Number of steps taken to optimize (could be less than max_iter if converged)
     
     """
     energy_history = []
 
-    if opt =='GradientDescentOptimizer':
-        opt = qml.GradientDescentOptimizer(opt_step)
+    if opt_name =='GradientDescentOptimizer':
+        opt = qml.GradientDescentOptimizer(stepsize=step_size)
 
-    elif opt =='QNGOptimizer':
-        opt = qml.QNGOptimizer(opt_step, diag_approx)
+    elif opt_name =='QNGOptimizer':
+        opt = qml.QNGOptimizer(stepsize=step_size, diag_approx=diag_approx)
 
     else:
-        raise ValueError('Use either QNGOptimizer of GradientDescentOptimizer')
-
-    energy_history = []
-    conv_tol = 1e-06
+        raise ValueError('Use either QNGOptimizer of GradientDescentOptimizer.')
 
     params = initial_params
     prev_energy = cost_fn(params)
+    energy_history = [prev_energy]
 
     for n in range(max_iter):
         params = opt.step(cost_fn, params)
@@ -52,8 +61,10 @@ def run_vqe(cost_fn, max_iter, initial_params, opt, opt_step, diag_approx=False)
 
         if conv <= conv_tol:
             break
-
+        
         energy_history.append(energy)
+        
+        # Update energy
         prev_energy = energy
         
-    return energy_history
+    return energy_history, n
