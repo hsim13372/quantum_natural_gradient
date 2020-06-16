@@ -25,4 +25,4 @@ We investigate the following systems:
 3. [LiH molecule](https://github.com/hsim13372/quantum_natural_gradient/tree/master/lih)
 
 and ran VQE calculations using "vanilla" gradient descent and gradient descent that uses quantum natural gradients for comparison.
-We provide several methods for visualizing the performance and optimization paths, and we empirically explore the robustness of QNG to parameter initialization.
+We provide several methods for visualizing the performance and optimization paths, and we empirically explore the robustness of QNG to parameter initialization [here](https://github.com/hsim13372/quantum_natural_gradient/tree/master/k_runs).
