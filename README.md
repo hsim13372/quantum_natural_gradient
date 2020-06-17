@@ -20,9 +20,9 @@ In addition, we provide several tutorials in this repo for running and analyzing
 
 We investigate the following systems:
 
-1. [Single qubit rotations](https://github.com/hsim13372/quantum_natural_gradient/tree/master/single_qubit_vqe) (where we can visualize the optimization paths on the Bloch sphere)
-2. [H2 molecule](https://github.com/hsim13372/quantum_natural_gradient/tree/master/h2)
-3. [LiH molecule](https://github.com/hsim13372/quantum_natural_gradient/tree/master/lih)
+1. [Single qubit rotations](https://github.com/hsim13372/quantum_natural_gradient/blob/master/single_qubit_vqe/single_qubit_rotations.ipynb) (where we can visualize the optimization paths on the Bloch sphere)
+2. [H2 molecule](https://github.com/hsim13372/quantum_natural_gradient/blob/master/h2/H2_qchem_VQE.ipynb). In this example, we construct the Hamiltonian using PennyLane's `qchem` module. We additionally provide a notebook that runs [Yamamoto](https://arxiv.org/abs/1909.05074)'s simplified Hydrogen example.
+3. [LiH molecule](https://github.com/hsim13372/quantum_natural_gradient/blob/master/lih/lih_4qubits.ipynb)
 
 and ran VQE calculations using "vanilla" gradient descent and gradient descent that uses quantum natural gradients for comparison.
 We provide several methods for visualizing the performance and optimization paths, and we empirically explore the robustness of QNG to parameter initialization [here](https://github.com/hsim13372/quantum_natural_gradient/tree/master/k_runs).

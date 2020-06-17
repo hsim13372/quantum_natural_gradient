@@ -5,7 +5,8 @@ import numpy as np
 import pennylane as qml
 
 
-def run_vqe(cost_fn, max_iter, initial_params, opt_name, step_size, conv_tol=1e-6, diag_approx=False):
+def run_vqe(cost_fn, max_iter, initial_params, opt_name, step_size, 
+            conv_tol=1e-6, diag_approx=False, lam=0, print_freq=20):
     """Launches a VQE calculation.
     
     Args:
@@ -26,6 +27,10 @@ def run_vqe(cost_fn, max_iter, initial_params, opt_name, step_size, conv_tol=1e-
         If using QNGOptimizer, diag_approx is an option for using the block-diagonal 
         approximation to the Fubini-Study metric. If false, the diagonal approximation
         is used.
+    lam : float
+        Regularizer term for QNGOptimizer
+    print_freq : int
+        Optimizer progress printing frequency
        
     Returns:
     ========
@@ -41,7 +46,7 @@ def run_vqe(cost_fn, max_iter, initial_params, opt_name, step_size, conv_tol=1e-
         opt = qml.GradientDescentOptimizer(stepsize=step_size)
 
     elif opt_name =='QNGOptimizer':
-        opt = qml.QNGOptimizer(stepsize=step_size, diag_approx=diag_approx)
+        opt = qml.QNGOptimizer(stepsize=step_size, diag_approx=diag_approx, lam=lam)
 
     else:
         raise ValueError('Use either QNGOptimizer of GradientDescentOptimizer.')
@@ -55,7 +60,7 @@ def run_vqe(cost_fn, max_iter, initial_params, opt_name, step_size, conv_tol=1e-
         energy = cost_fn(params)
         conv = np.abs(energy - prev_energy)
 
-        if n % 20 == 0:
+        if n % print_freq == 0:
             print('Iteration = {:},  Energy = {:.8f} Ha,  Convergence parameter = {'
                   ':.8f} Ha'.format(n, energy, conv))
 
